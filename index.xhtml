@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Color Blender</title>
+	<style>
+	body {background: #CCC; font: 85% Lucida Grande, sans-serif}
+	.color-sample {
+		display: inline-block;
+		vertical-align: middle;
+		width: 40px;
+		height: 30px;
+	}
+	p {
+		margin: 0
+	}
+	input {
+		font-family: monospace;
+		width: 13em;
+	}
+	rect, circle {
+		cursor: crosshair;
+	}
+	</style>
+</head>
+<body>
+<p>
+	<span id="color_first_sample" class="color-sample"/>
+	<input id="color_first_rgb_hex" value=""/>
+	<input id="color_first_rgb" value=""/>
+	<input id="color_first_hsl" value="hsl(0, 50, 50)"/>
+</p>
+<p>
+	<span id="color_last_sample" class="color-sample"/>
+	<input id="color_last_rgb_hex" value=""/>
+	<input id="color_last_rgb" value=""/>
+	<input id="color_last_hsl" value="hsl(0, 50, 50)"/>
+</p>
+
+<!--canvas id="canvas2" width="300" height="255"></canvas>
+<script type="text/javascript">
+
+
+
+var canvas2 = document.getElementById("canvas2");
+var context2 = canvas2.getContext("2d");
+
+
+function hsb(h, s, b) {
+	
+}
+
+
+var i = 255;
+do {
+	var gradient = context2.createLinearGradient(0, 0, 255, 0);
+	var j = 255 - i;
+	gradient.addColorStop(0, rgb(i,i,i));
+	gradient.addColorStop(1, rgb(i,0,0));
+	context2.fillStyle = gradient;
+	context2.fillRect(0, j, 255, j);
+} while (i=i-1);
+
+</script-->
+
+
+<svg id="paper" xmlns="http://www.w3.org/2000/svg" version="1.1" width="355" height="275">
+	<defs>
+		<linearGradient id="white">
+			<stop offset="0%" stop-color="white"/>
+			<stop offset="100%" stop-color="white" stop-opacity="0"/>
+		</linearGradient>
+		<linearGradient id="black" x1="0" y1="1" x2="0" y2="0">
+			<stop offset="0%" stop-color="black"/>
+			<stop offset="100%" stop-color="black" stop-opacity="0"/>
+		</linearGradient>
+		<linearGradient id="hue" x1="0" y1="1" x2="0" y2="0">
+			<stop offset="0%" stop-color="#ff0000"/>
+			<stop offset="17%" stop-color="#ffff00"/>
+			<stop offset="34%" stop-color="#00ff00"/>
+			<stop offset="50%" stop-color="#00ffff"/>
+			<stop offset="66%" stop-color="#0000ff"/>
+			<stop offset="82%" stop-color="#ff00ff"/>
+			<stop offset="100%" stop-color="#ff0000"/>
+		</linearGradient>
+	</defs>
+	<g>
+		<rect x="10" y="10" width="255" height="255" fill="hsl(1, 100%, 50%)" id="bg"/>
+		<rect x="10" y="10" fill="url(#white)" width="255" height="255"/>
+		<rect x="10" y="10" id="black_layer" fill="url(#black)" width="255" height="255"/>
+		<circle id="c" cx="134" cy="135" r="7" fill="none" stroke="#FFF" stroke-width="1"/>
+	</g>
+	<g transform="translate(275, 10)">
+		<rect fill="url(#hue)" width="20" height="255"></rect>
+		<path fill="#fff" d="M25,-5L20,0L25,5Z" stroke-width="1" stroke="#000" />
+	</g>
+</svg>
+
+<script type="text/javascript" src="utils.js"></script>
+<script type="text/javascript" src="main.js"></script>
+</body></html>
