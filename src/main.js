@@ -49,16 +49,21 @@ function changeRGB(text) {
 }
 
 
-first_hsl.onkeyup = function(){
-	changeHSL(first_hsl.value.trim());
+function updateHSL(){
+	changeHSL(first_hsl.value.trim())
+}
+
+updateHSL();
+
+first_hsl.onkeypress = function(){
+	setTimeout(updateHSL, 1)
 };
 
-first_rgb.onkeyup = function(){
-	changeRGB(first_rgb.value);
+first_rgb.onkeypress = function(){
+	setTimeout(function(){
+		changeRGB(first_rgb.value);
+	}, 1);
 };
-
-first_hsl.onkeyup();
-
 
 function moveCircle(x, y) {
 	x = Math.min(x, black_layer.width.baseVal.value);
