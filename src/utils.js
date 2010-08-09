@@ -1,15 +1,30 @@
-var rg = /^(?=[\da-f]$)/;
+function max(){
+	return Math.max.apply(Math, arguments)
+}
+
+function min(){
+	return Math.min.apply(Math, arguments)
+}
 
 function hsl(h, s, l) {
-	return "hsl("+h+", "+s+"%, "+l+"%)";
+	return "hsl("+
+		Math.round(h) + ", " +
+		Math.round(s) + "%, " +
+		Math.round(l) +"%)";
 }
 function rgb(r, g, b) {
-	return "rgb("+r+","+g+","+b+")";
-}
-function rgba(r, g, b, a) {
-	return "rgba("+r+","+g+","+b+","+a+")";
+	return "rgb("+
+		Math.round(r) + "," +
+		Math.round(g) + "," +
+		Math.round(b) +")";
 }
 
+
+var rg = /^(?=[\da-f]$)/;
+
+/**
+ * @see http://github.com/DmitryBaranovskiy/raphael/blob/master/raphael.js
+ */
 function hsl2rgb(h, s, l) {
 	if (h > 1 || s > 1 || l > 1) {
 		h /= 255;
@@ -50,29 +65,32 @@ function hsl2rgb(h, s, l) {
 	rgb.r *= 255;
 	rgb.g *= 255;
 	rgb.b *= 255;
-	r = (~~rgb.r).toString(16);
-	g = (~~rgb.g).toString(16);
-	b = (~~rgb.b).toString(16);
-	r = r.replace(rg, "0");
-	g = g.replace(rg, "0");
-	b = b.replace(rg, "0");
-	rgb.hex = "#" + r + g + b;
-	rgb.toString = function(){
-		return this.hex;
-	};
+	rgb.hex = rgb2hex(rgb);
 	return rgb;
 }
 
+function rgb2hex(r, g, b) {
+	if (typeof r == "object") {
+		g = r.g;
+		b = r.b;
+		r = r.r;
+	}
+	r = (~~r).toString(16);
+	g = (~~g).toString(16);
+	b = (~~b).toString(16);
+	r = r.replace(rg, "0");
+	g = g.replace(rg, "0");
+	b = b.replace(rg, "0");
+	return "#" + r + g + b;
+}
 
 function hsv_to_hsl(h, s, v) {
 	if (v === 0 || s === 0 && v === 1)
-		return {h:h, s:s, l:v}
+		return {h:h, s:s, l:v};
 
 	var hsl = {h:h};
 	hsl.l = (2 - s) * v;
 	hsl.s = s * v;
-
-
 
 	if (hsl.l <= 1 && hsl.l > 0)
 		hsl.s /= hsl.l;
@@ -92,7 +110,7 @@ function hsb_to_hsl(h, s, b) {
 }
 
 function hsl_to_hsv(h, s, l) {
-	var hsv = {h:h}
+	var hsv = {h: h};
 	if (l === 0 && s === 0) {
 		hsv.s = hsv.v = 0
 	} else {
@@ -105,41 +123,41 @@ function hsl_to_hsv(h, s, l) {
 }
 
 function hsl_to_hsb(h, s, l) {
-	var hsv = hsl_to_hsv(h, s/100, l/100)
-	hsv.v *= 100
-	hsv.s *= 100
+	var hsv = hsl_to_hsv(h, s/100, l/100);
+	hsv.v *= 100;
+	hsv.s *= 100;
 	return hsv
 }
 
 function rgb2hsb(red, green, blue) {
-		if (red > 1 || green > 1 || blue > 1) {
-				red /= 255;
-				green /= 255;
-				blue /= 255;
-		}
-		var max = mmax(red, green, blue),
-				min = mmin(red, green, blue),
-				hue,
-				saturation,
-				brightness = max;
-		if (min == max) {
-				return {h: 0, s: 0, b: max, toString: hsbtoString};
+	if (red > 1 || green > 1 || blue > 1) {
+		red /= 255;
+		green /= 255;
+		blue /= 255;
+	}
+	var mx = max(red, green, blue),
+		mn = min(red, green, blue),
+		hue,
+		saturation,
+		brightness = mx;
+	if (mn == mx) {
+		return {h: 0, s: 0, b: mx};
+	} else {
+		var delta = (mx - mn);
+		saturation = delta / mx;
+		if (red == mx) {
+			hue = (green - blue) / delta;
+		} else if (green == mx) {
+			hue = 2 + ((blue - red) / delta);
 		} else {
-				var delta = (max - min);
-				saturation = delta / max;
-				if (red == max) {
-						hue = (green - blue) / delta;
-				} else if (green == max) {
-						hue = 2 + ((blue - red) / delta);
-				} else {
-						hue = 4 + ((red - green) / delta);
-				}
-				hue /= 6;
-				hue < 0 && hue++;
-				hue > 1 && hue--;
+			hue = 4 + ((red - green) / delta);
 		}
-		return {h: hue, s: saturation, b: brightness, toString: hsbtoString};
-};
+		hue /= 6;
+		hue < 0 && hue++;
+		hue > 1 && hue--;
+	}
+	return {h: hue, s: saturation, b: brightness};
+}
 
 
 function $(id) {
@@ -160,8 +178,8 @@ if (!MouseEvent.prototype.offsetY) {
 }
 
 /**
- *
  * @param {string} text such as "rgb(1,2,0)"
+ * @return {Array} [1, 2, 0]
  */
 function parseTriple(text) {
 	return text.match(/\d+/g).map(function(d){

@@ -1,0 +1,20 @@
+body {
+	background: #CCC;
+	font: 85% Lucida Grande, sans-serif
+}
+.color-sample {
+	display: inline-block;
+	vertical-align: middle;
+	width: 40px;
+	height: 30px;
+}
+p {
+	margin: 0
+}
+input {
+	font-family: monospace;
+	width: 13em;
+}
+rect, circle {
+	cursor: crosshair;
+}

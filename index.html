@@ -1,67 +1,28 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>Color Blender</title>
-	<style>
-	body {background: #CCC; font: 85% Lucida Grande, sans-serif}
-	.color-sample {
-		display: inline-block;
-		vertical-align: middle;
-		width: 40px;
-		height: 30px;
-	}
-	p {
-		margin: 0
-	}
-	input {
-		font-family: monospace;
-		width: 13em;
-	}
-	rect, circle {
-		cursor: crosshair;
-	}
-	</style>
+<title>Color Blender</title>
+<link rel="stylesheet" href="src/style.css"/>
 </head>
 <body>
-<p>
-	<span id="color_first_sample" class="color-sample"/>
-	<input id="color_first_rgb_hex" value=""/>
-	<input id="color_first_rgb" value=""/>
-	<input id="color_first_hsl" value="hsl(0, 50, 50)"/>
+<p class="row">
+	<span id="first_sample" class="color-sample"></span>
+	<input id="first_rgb_hex"/>
+	<input id="first_rgb"/>
+	<input id="first_hsl" value="hsl(0,0,0)"/>
 </p>
 <p>
-	<span id="color_last_sample" class="color-sample"/>
-	<input id="color_last_rgb_hex" value=""/>
-	<input id="color_last_rgb" value=""/>
-	<input id="color_last_hsl" value="hsl(0, 50, 50)"/>
+	<span id="sample_1" class="color-sample"></span>
+	<input id="rgb_hex_1"/>
+	<input id="rgb_1"/>
+	<input id="hsl_1"/>
 </p>
-
-<!--canvas id="canvas2" width="300" height="255"></canvas>
-<script type="text/javascript">
-
-
-
-var canvas2 = document.getElementById("canvas2");
-var context2 = canvas2.getContext("2d");
-
-
-function hsb(h, s, b) {
-	
-}
-
-
-var i = 255;
-do {
-	var gradient = context2.createLinearGradient(0, 0, 255, 0);
-	var j = 255 - i;
-	gradient.addColorStop(0, rgb(i,i,i));
-	gradient.addColorStop(1, rgb(i,0,0));
-	context2.fillStyle = gradient;
-	context2.fillRect(0, j, 255, j);
-} while (i=i-1);
-
-</script-->
-
+<p class="row">
+	<span id="last_sample" class="color-sample"></span>
+	<input id="last_rgb_hex" value=""/>
+	<input id="last_rgb" value=""/>
+	<input id="last_hsl"/>
+</p>
 
 <svg id="paper" xmlns="http://www.w3.org/2000/svg" version="1.1" width="355" height="275">
 	<defs>
@@ -95,6 +56,6 @@ do {
 	</g>
 </svg>
 
-<script type="text/javascript" src="utils.js"></script>
-<script type="text/javascript" src="main.js"></script>
+<script src="src/utils.js"></script>
+<script src="src/main.js"></script>
 </body></html>
