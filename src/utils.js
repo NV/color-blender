@@ -84,6 +84,14 @@ function rgb2hex(r, g, b) {
 	return "#" + r + g + b;
 }
 
+function hex2rgb(hex) {
+	return [
+		parseInt(hex.slice(1,3), 16),
+		parseInt(hex.slice(3,5), 16),
+		parseInt(hex.slice(5,7), 16)
+	]
+}
+
 function hsv_to_hsl(h, s, v) {
 	if (v === 0 || s === 0 && v === 1)
 		return {h:h, s:s, l:v};

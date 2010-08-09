@@ -48,6 +48,19 @@ function changeRGB(text) {
 	first_hsl.value = hsl(HSL.h, HSL.s, HSL.l);
 }
 
+function changeRGBhex(text) {
+	first_sample.style.backgroundColor = text;
+	var triple = hex2rgb(text);
+	var HSB = rgb2hsb(triple[0], triple[1], triple[2]);
+	first_rgb.value = rgb.apply(null, triple);
+
+	setHue(HSB.h * 360);
+	moveCircle(HSB.s*255, (1 - HSB.b)*255);
+
+	var HSL = hsb_to_hsl(HSB.h, HSB.s, HSB.b);
+	first_hsl.value = hsl(HSL.h, HSL.s, HSL.l);
+}
+
 
 function updateHSL(){
 	changeHSL(first_hsl.value.trim())
@@ -64,6 +77,13 @@ first_rgb.onkeypress = function(){
 		changeRGB(first_rgb.value);
 	}, 1);
 };
+
+first_rgb_hex.onkeypress = function(){
+	setTimeout(function(){
+		changeRGBhex(first_rgb_hex.value)
+	}, 1);
+}
+
 
 function moveCircle(x, y) {
 	x = Math.min(x, black_layer.width.baseVal.value);
