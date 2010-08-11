@@ -1,11 +1,3 @@
-function max(){
-	return Math.max.apply(Math, arguments)
-}
-
-function min(){
-	return Math.min.apply(Math, arguments)
-}
-
 function hsl(h, s, l) {
 	return "hsl("+
 		Math.round(h) + ", " +
@@ -27,9 +19,9 @@ var rg = /^(?=[\da-f]$)/;
  */
 function hsl2rgb(h, s, l) {
 	if (h > 1 || s > 1 || l > 1) {
-		h /= 255;
-		s /= 255;
-		l /= 255;
+		h /= 100;
+		s /= 100;
+		l /= 100;
 	}
 	var rgb = {},
 		channels = ["r", "g", "b"],
@@ -143,8 +135,8 @@ function rgb2hsb(red, green, blue) {
 		green /= 255;
 		blue /= 255;
 	}
-	var mx = max(red, green, blue),
-		mn = min(red, green, blue),
+	var mx = Math.max(red, green, blue),
+		mn = Math.min(red, green, blue),
 		hue,
 		saturation,
 		brightness = mx;
@@ -174,14 +166,12 @@ function $(id) {
 
 if (!MouseEvent.prototype.offsetX) {
 	MouseEvent.prototype.__defineGetter__("offsetX", function(){
-		var x = parseInt(this.target.getAttribute("x")) || 0;
-		return this.clientX - this.target.getBoundingClientRect().left + x;
+		return this.clientX - this.target.getBoundingClientRect().left + 10;
 	})
 }
 if (!MouseEvent.prototype.offsetY) {
 	MouseEvent.prototype.__defineGetter__("offsetY", function(){
-		var y = parseInt(this.target.getAttribute("y")) || 0;
-		return this.clientY - this.target.getBoundingClientRect().top + y;
+		return this.clientY - this.target.getBoundingClientRect().top + 10;
 	})
 }
 
