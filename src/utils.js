@@ -1,10 +1,20 @@
 function hsl(h, s, l) {
+	if (h.h > -1) {
+		s = h.s;
+		l = h.l;
+		h = h.h;
+	}
 	return "hsl("+
 		Math.round(h) + ", " +
 		Math.round(s) + "%, " +
 		Math.round(l) +"%)";
 }
 function rgb(r, g, b) {
+	if (r.r > -1) {
+		g = r.g;
+		b = r.b;
+		r = r.r;
+	}
 	return "rgb("+
 		Math.round(r) + "," +
 		Math.round(g) + "," +
@@ -19,7 +29,7 @@ var rg = /^(?=[\da-f]$)/;
  */
 function hsl2rgb(h, s, l) {
 	if (h > 1 || s > 1 || l > 1) {
-		h /= 100;
+		h /= 360;
 		s /= 100;
 		l /= 100;
 	}
@@ -106,6 +116,7 @@ function hsb_to_hsl(h, s, b) {
 	var hsl = hsv_to_hsl(h, s, b);
 	hsl.s *= 100;
 	hsl.l *= 100;
+	hsl.h *= 360;
 	return hsl
 }
 
@@ -135,26 +146,28 @@ function rgb2hsb(red, green, blue) {
 		green /= 255;
 		blue /= 255;
 	}
-	var mx = Math.max(red, green, blue),
-		mn = Math.min(red, green, blue),
+	var max = Math.max(red, green, blue),
+		min = Math.min(red, green, blue),
 		hue,
 		saturation,
-		brightness = mx;
-	if (mn == mx) {
-		return {h: 0, s: 0, b: mx};
+		brightness = max;
+	if (min == max) {
+		return {h: 0, s: 0, b: max};
 	} else {
-		var delta = (mx - mn);
-		saturation = delta / mx;
-		if (red == mx) {
+		var delta = (max - min);
+		saturation = delta / max;
+		if (red == max) {
 			hue = (green - blue) / delta;
-		} else if (green == mx) {
+		} else if (green == max) {
 			hue = 2 + ((blue - red) / delta);
 		} else {
 			hue = 4 + ((red - green) / delta);
 		}
 		hue /= 6;
-		hue < 0 && hue++;
-		hue > 1 && hue--;
+		if (hue < 0)
+			hue++;
+		else if (hue > 1)
+			hue--;
 	}
 	return {h: hue, s: saturation, b: brightness};
 }
@@ -184,3 +197,7 @@ function parseTriple(text) {
 		return parseFloat(d)
 	});
 }
+
+Array.prototype.__defineGetter__("last", function(){
+	return this[this.length - 1];
+});

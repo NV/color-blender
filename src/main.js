@@ -1,59 +1,41 @@
-var hsl_0 = $("hsl_0");
-var rgb_hex_0 = $("rgb-hex_0");
-var rgb_0 = $("rgb_0");
-var sample_0 = $("sample_0");
+var I = [
+	{
+		hsl: $("hsl_0"),
+		rgb_hex: $("rgb-hex_0"),
+		rgb: $("rgb_0"),
+		sample: $("sample_0")
+	},
+	{
+		hsl: $("hsl_last"),
+		rgb_hex: $("rgb-hex_last"),
+		rgb: $("rgb_last"),
+		sample: $("sample_last")
+	}
+];
 
-var hsl_last = $("hsl_last");
-var rgb_hex_last = $("rgb-hex_last");
-var rgb_last = $("rgb_last");
-var sample_last = $("sample_last");
+var markers = [
+	$("marker_0"),
+	$("marker_last")
+];
+
+var m_hue = [
+	$("hue_0"),
+	$("hue_last")
+]
+
+var inputs = $("inputs");
+var bg = $("bg");
+var black_layer = $("black_layer");
 
 var hue_selector = $("hue_selector");
 var hue_0 = $("hue_0");
+var hue_last = $("hue_last");
 
-var I = {
-	0: {
-		hsl: hsl_0,
-		rgb_hex: rgb_hex_0,
-		rgb: rgb_0,
-		sample: sample_0
-	},
-	last: {
-		hsl: hsl_last,
-		rgb_hex: rgb_hex_last,
-		rgb: rgb_last,
-		sample: sample_last
-	}
-};
-
-var markers = {
-	0: $("marker_0"),
-	last: $("marker_last")
-};
-
-var last = $("last");
-
-var bg = $("bg");
-var paper = $("paper");
-var black_layer = $("black_layer");
-
-
-var inputs = $("inputs");
-inputs.onkeypress = function(e){
-	var splitted = e.target.id.split("_");
-	var n = splitted[1];
-	setTimeout(function(){
-		I[n].sample.style.background = e.target.value;
-		var RGB = parseTriple(getComputedStyle(I[n].sample).backgroundColor);
-	})
-};
 
 var n = 0;
 inputs.addEventListener("focus", function(e){
 	n = e.target.id.split("_")[1] || n;
 }, !0);
-
-
 
 
 function updateColor(n, text) {
@@ -63,10 +45,20 @@ function updateColor(n, text) {
 
 
 function setHue(h) {
-	bg.setAttribute("fill", hsl(h, 100, 50))
+	if (h > 1)
+		h /= 360;
+
+	m_hue[n].setAttribute("transform", "translate(0,"+ ((1 - h % 1) * 255) + ")");
+
+	h *= 360;
+	bg.setAttribute("fill", hsl(h, 100, 50));	
 }
 
-function changeHSL(text) {
+function changeHSL(element) {
+
+	var n = element.id.split("_")[1];
+	var text = element.value;
+
 	if (!text) return;
 	I[n].sample.style.backgroundColor = text;
 
@@ -76,57 +68,52 @@ function changeHSL(text) {
 	moveCircle(hsv.s*255/100, (100 - hsv.v)*255/100);
 
 	var RGB = hsl2rgb(triple[0], triple[1], triple[2]);
-	I[n].rgb.value = rgb(Math.round(RGB.r), Math.round(RGB.g), Math.round(RGB.b));
+	I[n].rgb.value = rgb(RGB);
 	I[n].rgb_hex.value = RGB.hex;
 
 	I[n].hsl.hsv = hsv;
 }
 
 function changeRGB(text) {
-	sample_0.style.backgroundColor = text;
+	I[n].sample.style.backgroundColor = text;
 	var triple = parseTriple(text);
 	var HSB = rgb2hsb(triple[0], triple[1], triple[2]);
-	rgb_hex_0.value = rgb2hex.apply(null, triple);
+	I[n].rgb_hex.value = rgb2hex.apply(null, triple);
 	setHue(HSB.h * 360);
 	moveCircle(HSB.s*255, (1 - HSB.b)*255);
 
 	var HSL = hsb_to_hsl(HSB.h, HSB.s, HSB.b);
-	hsl_0.value = hsl(HSL.h, HSL.s, HSL.l);
+	I[n].hsl.value = hsl(HSL);
 }
 
 function changeRGBhex(text) {
-	sample_0.style.backgroundColor = text;
+	I[n].sample.style.backgroundColor = text;
 	var triple = hex2rgb(text);
 	var HSB = rgb2hsb(triple[0], triple[1], triple[2]);
-	rgb_0.value = rgb.apply(null, triple);
+	I[n].rgb.value = rgb.apply(null, triple);
 
 	setHue(HSB.h * 360);
 	moveCircle(HSB.s*255, (1 - HSB.b)*255);
 
 	var HSL = hsb_to_hsl(HSB.h, HSB.s, HSB.b);
-	hsl_0.value = hsl(HSL.h, HSL.s, HSL.l);
+	I[n].hsl.value = hsl(HSL.h);
 }
 
 
-function updateHSL(){
-	changeHSL(hsl_0.value.trim())
-}
 
-updateHSL();
-
-hsl_0.onkeyup = hsl_last.onkeyup = function(e){
+I[0].hsl.onkeyup = I.last.hsl.onkeyup = function(e){
 	if (e.shiftKey && e.ctrlKey && e.metaKey) return;
-	updateHSL()
+	changeHSL(e.target);
 };
 
-rgb_0.onkeyup = function(e){
+I[0].rgb.onkeyup = I.last.rgb.onkeyup= function(e){
 	if (e.shiftKey && e.ctrlKey && e.metaKey) return;
-	changeRGB(rgb_0.value);
+	changeRGB(e.target.value);
 };
 
-rgb_hex_0.onkeyup = function(e){
+I[0].rgb_hex.onkeyup = I.last.rgb_hex.onkeyup = function(e){
 	if (e.shiftKey && e.ctrlKey && e.metaKey) return;
-	changeRGBhex(rgb_hex_0.value);
+	changeRGBhex(e.target.value);
 };
 
 
@@ -157,14 +144,12 @@ var xy;
 function updateSB(x, y) {
 	var s = x/255;
 	var b = 1 - y/255;
-	var HSL = hsb_to_hsl(hsl_0.hsv.v, s, b);
-	I[n].sample.style.backgroundColor = hsl(hsl_0.hsv.h, HSL.s, HSL.l);
+	var HSL = hsb_to_hsl(I[n].hsl.hsv.h, s, b);
+	I[n].sample.style.backgroundColor = I[n].hsl.value = hsl(HSL);
 
 	var RGB = hsl2rgb(HSL.h, HSL.s, HSL.l);
-
-	I[n].rgb.value = rgb(RGB.r, RGB.g, RGB.b);
+	I[n].rgb.value = rgb(RGB);
 	I[n].rgb_hex.value = RGB.hex;
-	I[n].hsl.value = hsl(hsl_0.hsv.h, Math.round(HSL.s), Math.round(HSL.l))
 }
 
 function updateCirclePosition(e) {
@@ -208,15 +193,15 @@ document.onmousemove = function(e) {
 };
 
 document.onmouseup = function() {
-	pressed = false;
+	pressed = 0;
 };
 
 
-changeHSL(hsl_0.value);
-var h_pressed;
+changeHSL(I[0].hsl);
+changeHSL(I.last.hsl);
 
+var h_pressed;
 hue_selector.onmousedown = function(e){
 	h_pressed = true;
-	var y = e.offsetY;
-	hue_0.setAttribute("transform", "translate(0,"+(y-10)+")");
+	setHue(1 - (e.offsetY - 10) / 255);
 };
