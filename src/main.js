@@ -82,7 +82,7 @@ function changeRGB(text) {
 	setHue(HSB.h * 360);
 	moveCircle(HSB.s*255, (1 - HSB.b)*255);
 
-	var HSL = hsb_to_hsl(HSB.h, HSB.s, HSB.b);
+	var HSL = hsb2hsl(HSB.h, HSB.s, HSB.b);
 	I[n].hsl.value = hsl(HSL);
 }
 
@@ -95,8 +95,8 @@ function changeRGBhex(text) {
 	setHue(HSB.h * 360);
 	moveCircle(HSB.s*255, (1 - HSB.b)*255);
 
-	var HSL = hsb_to_hsl(HSB.h, HSB.s, HSB.b);
-	I[n].hsl.value = hsl(HSL.h);
+	var HSL = hsb2hsl(HSB.h, HSB.s, HSB.b);
+	I[n].hsl.value = hsl(HSL);
 }
 
 
@@ -144,7 +144,7 @@ var xy;
 function updateSB(x, y) {
 	var s = x/255;
 	var b = 1 - y/255;
-	var HSL = hsb_to_hsl(I[n].hsl.hsv.h, s, b);
+	var HSL = hsb2hsl(I[n].hsl.hsv.h, s, b);
 	I[n].sample.style.backgroundColor = I[n].hsl.value = hsl(HSL);
 
 	var RGB = hsl2rgb(HSL.h, HSL.s, HSL.l);

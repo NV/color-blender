@@ -4,21 +4,34 @@ function hsl(h, s, l) {
 		l = h.l;
 		h = h.h;
 	}
+	if (h < 1 | s < 1 | l < 1) {
+		h *= 360;
+		s *= 100;
+		l *= 100;
+	}
 	return "hsl("+
-		Math.round(h) + ", " +
-		Math.round(s) + "%, " +
-		Math.round(l) +"%)";
+		~~(h + .5) + ", " +
+		~~(s + .5) + "%, " +
+		~~(l + .5) + "%)";
 }
+
 function rgb(r, g, b) {
 	if (r.r > -1) {
 		g = r.g;
 		b = r.b;
 		r = r.r;
 	}
-	return "rgb("+
-		Math.round(r) + "," +
-		Math.round(g) + "," +
-		Math.round(b) +")";
+	if (r < 1 | g < 1 | b < 1) {
+		r *= 255;
+		g *= 255;
+		b *= 255;
+	}
+
+	return "rgb("+ [
+		~~(r + .5),
+		~~(g + .5),
+		~~(b + .5)].join(", ")
+	+")";
 }
 
 
@@ -94,13 +107,19 @@ function hex2rgb(hex) {
 	]
 }
 
-function hsv_to_hsl(h, s, v) {
-	if (v === 0 || s === 0 && v === 1)
-		return {h:h, s:s, l:v};
+function hsb2hsl(h, s, b) {
+	if (h > 1 | s > 1 | b > 1) {
+		h /= 360;
+		s /= 100;
+		b /= 100;
+	}
+
+	if (b === 0 || s === 0 && b === 1)
+		return {h:h, s:s, l:b};
 
 	var hsl = {h:h};
-	hsl.l = (2 - s) * v;
-	hsl.s = s * v;
+	hsl.l = (2 - s) * b;
+	hsl.s = s * b;
 
 	if (hsl.l <= 1 && hsl.l > 0)
 		hsl.s /= hsl.l;
@@ -110,14 +129,6 @@ function hsv_to_hsl(h, s, v) {
 	hsl.l /= 2;
 
 	return hsl;
-}
-
-function hsb_to_hsl(h, s, b) {
-	var hsl = hsv_to_hsl(h, s, b);
-	hsl.s *= 100;
-	hsl.l *= 100;
-	hsl.h *= 360;
-	return hsl
 }
 
 function hsl_to_hsv(h, s, l) {
