@@ -50,8 +50,7 @@ function setHue(h) {
 
 	m_hue[n].setAttribute("transform", "translate(0,"+ ((1 - h % 1) * 255) + ")");
 
-	h *= 360;
-	bg.setAttribute("fill", hsl(h, 100, 50));	
+	bg.setAttribute("fill", hsl(h, 1, .5));	
 }
 
 function changeHSL(element) {
@@ -63,15 +62,15 @@ function changeHSL(element) {
 	I[n].sample.style.backgroundColor = text;
 
 	var triple = parseTriple(text);
-	var hsv = hsl_to_hsb(triple[0], triple[1], triple[2]);
-	setHue(hsv.h);
-	moveCircle(hsv.s*255/100, (100 - hsv.v)*255/100);
+	var HSB = hsl2hsb(triple[0], triple[1], triple[2]);
+	setHue(HSB.h);
+	moveCircle(HSB.s*255, (1 - HSB.b)*255);
 
 	var RGB = hsl2rgb(triple[0], triple[1], triple[2]);
 	I[n].rgb.value = rgb(RGB);
 	I[n].rgb_hex.value = RGB.hex;
 
-	I[n].hsl.hsv = hsv;
+	I[n].hsl.hsv = HSB;
 }
 
 function changeRGB(text) {
@@ -196,12 +195,14 @@ document.onmouseup = function() {
 	pressed = 0;
 };
 
-
-changeHSL(I[0].hsl);
-changeHSL(I.last.hsl);
-
 var h_pressed;
 hue_selector.onmousedown = function(e){
 	h_pressed = true;
 	setHue(1 - (e.offsetY - 10) / 255);
 };
+
+
+n = "last";
+changeHSL(I.last.hsl);
+n = 0;
+changeHSL(I[0].hsl);

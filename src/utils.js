@@ -9,6 +9,7 @@ function hsl(h, s, l) {
 		s *= 100;
 		l *= 100;
 	}
+
 	return "hsl("+
 		~~(h + .5) + ", " +
 		~~(s + .5) + "%, " +
@@ -131,24 +132,22 @@ function hsb2hsl(h, s, b) {
 	return hsl;
 }
 
-function hsl_to_hsv(h, s, l) {
-	var hsv = {h: h};
+function hsl2hsb(h, s, l) {
+	if (h > 1 | s > 1 | l > 1) {
+		h /= 360;
+		s /= 100;
+		l /= 100;
+	}
+	var hsb = {h: h};
 	if (l === 0 && s === 0) {
-		hsv.s = hsv.v = 0
+		hsb.s = hsb.b = 0;
 	} else {
 		l *= 2;
 		s *= (l <= 1)? l : 2 - l;
-		hsv.v = (l + s) / 2;
-		hsv.s = (2 * s) / (l + s);
+		hsb.b = (l + s) / 2;
+		hsb.s = (2 * s) / (l + s);
 	}
-	return hsv
-}
-
-function hsl_to_hsb(h, s, l) {
-	var hsv = hsl_to_hsv(h, s/100, l/100);
-	hsv.v *= 100;
-	hsv.s *= 100;
-	return hsv
+	return hsb
 }
 
 function rgb2hsb(red, green, blue) {
