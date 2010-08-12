@@ -70,7 +70,7 @@ function changeHSL(element) {
 	I[n].rgb.value = rgb(RGB);
 	I[n].rgb_hex.value = RGB.hex;
 
-	I[n].hsl.hsv = HSB;
+	I[n].hsl.hsb = HSB;
 }
 
 function changeRGB(text) {
@@ -143,7 +143,7 @@ var xy;
 function updateSB(x, y) {
 	var s = x/255;
 	var b = 1 - y/255;
-	var HSL = hsb2hsl(I[n].hsl.hsv.h, s, b);
+	var HSL = hsb2hsl(I[n].hsl.hsb.h, s, b);
 	I[n].sample.style.backgroundColor = I[n].hsl.value = hsl(HSL);
 
 	var RGB = hsl2rgb(HSL.h, HSL.s, HSL.l);

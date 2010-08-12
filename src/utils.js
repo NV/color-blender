@@ -4,7 +4,7 @@ function hsl(h, s, l) {
 		l = h.l;
 		h = h.h;
 	}
-	if (h<1 & h>0 | s<1 & s>0 | l<1 & l>0) {
+	if (h<=1 & h>0 | s<=1 & s>0 | l<=1 & l>0) {
 		h *= 360;
 		s *= 100;
 		l *= 100;
@@ -21,11 +21,6 @@ function rgb(r, g, b) {
 		g = r.g;
 		b = r.b;
 		r = r.r;
-	}
-	if (r<1 & r>0 | g<1 & g>0 | b<1 & b>0) {
-		r *= 255;
-		g *= 255;
-		b *= 255;
 	}
 
 	return "rgb("+ [
@@ -129,6 +124,9 @@ function hsb2hsl(h, s, b) {
 
 	hsl.l /= 2;
 
+	if (hsl.s > 1)
+		hsl.s = 1;
+	
 	return hsl;
 }
 
