@@ -37,6 +37,11 @@ var rg = /^(?=[\da-f]$)/;
  * @see http://github.com/DmitryBaranovskiy/raphael/blob/master/raphael.js
  */
 function hsl2rgb(h, s, l) {
+	if (h.h > -1) {
+		s = h.s;
+		l = h.l;
+		h = h.h;
+	}	
 	if (h > 1 || s > 1 || l > 1) {
 		h /= 360;
 		s /= 100;
@@ -104,7 +109,7 @@ function hex2rgb(hex) {
 }
 
 function hsb2hsl(h, s, b) {
-	if (h.h) {
+	if (h.h > -1) {
 		s = h.s;
 		b = h.b;
 		h = h.h;
@@ -211,7 +216,3 @@ function parseTriple(text) {
 		return parseFloat(d)
 	});
 }
-
-Array.prototype.__defineGetter__("last", function(){
-	return this[this.length - 1];
-});

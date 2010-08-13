@@ -1,35 +1,44 @@
 var I = [
 	{
 		hsl: $("hsl_0"),
-		rgb_hex: $("rgb-hex_0"),
+		hex: $("hex_0"),
 		rgb: $("rgb_0"),
 		sample: $("sample_0")
 	},
 	{
-		hsl: $("hsl_last"),
-		rgb_hex: $("rgb-hex_last"),
-		rgb: $("rgb_last"),
-		sample: $("sample_last")
+		hsl: $("hsl_1"),
+		hex: $("hex_1"),
+		rgb: $("rgb_1"),
+		sample: $("sample_1")
 	}
 ];
 
-var markers = [
-	$("marker_0"),
-	$("marker_last")
+var M = [
+	$("m_0"),
+	$("m_1")
 ];
 
-var m_hue = [
+var H = [
 	$("hue_0"),
-	$("hue_last")
+	$("hue_1")
 ];
+
+var B = [
+	{
+		hsl: $("b_hsl_0"),
+		hex: $("b_hex_0"),
+		rgb: $("b_rgb_0"),
+		sample: $("b_0")
+	}
+]
+
+var HSBs = [{},{}];
 
 var inputs = $("inputs");
 var bg = $("bg");
 var black_layer = $("black_layer");
 
 var hue_selector = $("hue_selector");
-var hue_0 = $("hue_0");
-var hue_last = $("hue_last");
 
 
 var n = 0;
@@ -48,7 +57,7 @@ function setHue(h) {
 	if (h > 1)
 		h /= 360;
 
-	m_hue[n].setAttribute("transform", "translate(0,"+ ((1 - h % 1) * 255) + ")");
+	H[n].setAttribute("transform", "translate(0,"+ ((1 - h % 1) * 255) + ")");
 
 	bg.setAttribute("fill", hsl(h, 1, .5));	
 }
@@ -68,23 +77,25 @@ function changeHSL(element) {
 
 	var RGB = hsl2rgb(triple[0], triple[1], triple[2]);
 	I[n].rgb.value = rgb(RGB);
-	I[n].rgb_hex.value = RGB.hex;
+	I[n].hex.value = RGB.hex;
 
-	I[n].hsl.hsb = HSB;
+	HSBs[n] = HSB;
+	blend()
 }
 
 function changeRGB(text) {
 	I[n].sample.style.backgroundColor = text;
 	var triple = parseTriple(text);
 	var HSB = rgb2hsb(triple[0], triple[1], triple[2]);
-	I[n].rgb_hex.value = rgb2hex.apply(null, triple);
+	I[n].hex.value = rgb2hex.apply(null, triple);
 	setHue(HSB.h * 360);
 	moveCircle(HSB.s*255, (1 - HSB.b)*255);
 
 	var HSL = hsb2hsl(HSB.h, HSB.s, HSB.b);
 	I[n].hsl.value = hsl(HSL);
 
-	I[n].hsl.hsb = HSB;
+	HSBs[n] = HSB;
+	blend()
 }
 
 function changeRGBhex(text) {
@@ -99,22 +110,23 @@ function changeRGBhex(text) {
 	var HSL = hsb2hsl(HSB.h, HSB.s, HSB.b);
 	I[n].hsl.value = hsl(HSL);
 
-	I[n].hsl.hsb = HSB;	
+	HSBs[n] = HSB;
+	blend()
 }
 
 
 
-I[0].hsl.onkeyup = I.last.hsl.onkeyup = function(e){
+I[0].hsl.onkeyup = I[1].hsl.onkeyup = function(e){
 	if (e.shiftKey && e.ctrlKey && e.metaKey) return;
 	changeHSL(e.target);
 };
 
-I[0].rgb.onkeyup = I.last.rgb.onkeyup= function(e){
+I[0].rgb.onkeyup = I[1].rgb.onkeyup= function(e){
 	if (e.shiftKey && e.ctrlKey && e.metaKey) return;
 	changeRGB(e.target.value);
 };
 
-I[0].rgb_hex.onkeyup = I.last.rgb_hex.onkeyup = function(e){
+I[0].hex.onkeyup = I[1].hex.onkeyup = function(e){
 	if (e.shiftKey && e.ctrlKey && e.metaKey) return;
 	changeRGBhex(e.target.value);
 };
@@ -129,7 +141,7 @@ function moveCircle(x, y) {
 	x = Math.max(0, x);
 	y = Math.min(y, black_layer.height.baseVal.value);
 	y = Math.max(0, y);
-	var m = markers[n];
+	var m = M[n];
 	m.setAttribute(m.cx ? "cx" : "x", x);
 	m.setAttribute(m.cy ? "cy" : "y", y);
 	return [x, y];
@@ -144,14 +156,16 @@ var xy;
 
 
 function updateSB(x, y) {
-	var s = x/255;
-	var b = 1 - y/255;
-	var HSL = hsb2hsl(I[n].hsl.hsb.h, s, b);
+	HSBs[n].s = x/255;
+	HSBs[n].b = 1 - y/255;
+	var HSL = hsb2hsl(HSBs[n]);
 	I[n].sample.style.backgroundColor = I[n].hsl.value = hsl(HSL);
 
 	var RGB = hsl2rgb(HSL.h, HSL.s, HSL.l);
 	I[n].rgb.value = rgb(RGB);
-	I[n].rgb_hex.value = RGB.hex;
+	I[n].hex.value = RGB.hex;
+
+	blend()
 }
 
 function updateCirclePosition(e) {
@@ -162,14 +176,14 @@ function updateCirclePosition(e) {
 
 	var _xy = moveCircle(xy[0] + delta_x, xy[1] + delta_y);
 
-	updateSB(_xy[0], _xy[1])
+	updateSB(_xy[0], _xy[1]);
 }
 
 black_layer.onmousedown = function(e){
 	pressed = true;
 	
 	if (e.button)
-		n = "last";
+		n = 1;
 	else
 		n = 0;
 
@@ -184,7 +198,7 @@ black_layer.onmousedown = function(e){
 	return false;
 };
 
-black_layer.oncontextmenu = markers.last.oncontextmenu = markers[0].oncontextmenu = function(){
+black_layer.oncontextmenu = M[1].oncontextmenu = M[0].oncontextmenu = function(){
 	return false;
 };
 
@@ -202,23 +216,37 @@ var h_pressed;
 hue_selector.onmousedown = function(e){
 	h_pressed = true;
 	if (e.button)
-		n = "last";
+		n = 1;
 	else
 		n = 0;
 	updateHue(1 - (e.offsetY - 10) / 255);
 };
 
 function updateHue(h){
-	setHue(h)
-	I[n].hsl.hsb.h = h;
-	var HSL = hsb2hsl(I[n].hsl.hsb);
-	I[n].hsl.value = hsl(HSL);
+	setHue(h);
+	HSBs[n].h = h;
+	var HSL = hsb2hsl(HSBs[n]);
+	I[n].sample.style.background = I[n].hsl.value = hsl(HSL);
 	var RGB = hsl2rgb(HSL);
 	I[n].rgb.value = rgb(RGB);
+	blend()
+}
+
+function blend(){
+	var c = {
+		h: (HSBs[0].h + HSBs[1].h) / 2,
+		s: (HSBs[0].s + HSBs[1].s) / 2,
+		b: (HSBs[0].b + HSBs[1].b) / 2
+	};
+	var HSL = hsb2hsl(c);
+	B[0].sample.style.background = B[0].hsl.value = hsl(HSL);
+	var RGB = hsl2rgb(HSL);
+	B[0].rgb.value = rgb(RGB);
+	B[0].hex.value = RGB.hex;
 }
 
 
-n = "last";
-changeHSL(I.last.hsl);
+n = 1;
+changeHSL(I[1].hsl);
 n = 0;
 changeHSL(I[0].hsl);

@@ -4,4 +4,4 @@ The new look of [Meyer's Color Blender](http://meyerweb.com/eric/tools/color-ble
 I'm building it for [10K Apart competition](http://10k.aneventapart.com/). 
 You can join me and we will split the prize!
 
-It doesn't work yet!
+It should work already.
