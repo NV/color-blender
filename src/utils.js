@@ -104,6 +104,12 @@ function hex2rgb(hex) {
 }
 
 function hsb2hsl(h, s, b) {
+	if (h.h) {
+		s = h.s;
+		b = h.b;
+		h = h.h;
+	}
+
 	if (h > 1 | s > 1 | b > 1) {
 		h /= 360;
 		s /= 100;

@@ -21,7 +21,7 @@ var markers = [
 var m_hue = [
 	$("hue_0"),
 	$("hue_last")
-]
+];
 
 var inputs = $("inputs");
 var bg = $("bg");
@@ -83,6 +83,8 @@ function changeRGB(text) {
 
 	var HSL = hsb2hsl(HSB.h, HSB.s, HSB.b);
 	I[n].hsl.value = hsl(HSL);
+
+	I[n].hsl.hsb = HSB;
 }
 
 function changeRGBhex(text) {
@@ -96,6 +98,8 @@ function changeRGBhex(text) {
 
 	var HSL = hsb2hsl(HSB.h, HSB.s, HSB.b);
 	I[n].hsl.value = hsl(HSL);
+
+	I[n].hsl.hsb = HSB;	
 }
 
 
@@ -135,7 +139,6 @@ function moveCircle(x, y) {
 var out = $("out");
 
 var pressed = 0;
-var pointer_x, pointer_y;
 var start_x, start_y;
 var xy;
 
@@ -198,8 +201,21 @@ document.onmouseup = function() {
 var h_pressed;
 hue_selector.onmousedown = function(e){
 	h_pressed = true;
-	setHue(1 - (e.offsetY - 10) / 255);
+	if (e.button)
+		n = "last";
+	else
+		n = 0;
+	updateHue(1 - (e.offsetY - 10) / 255);
 };
+
+function updateHue(h){
+	setHue(h)
+	I[n].hsl.hsb.h = h;
+	var HSL = hsb2hsl(I[n].hsl.hsb);
+	I[n].hsl.value = hsl(HSL);
+	var RGB = hsl2rgb(HSL);
+	I[n].rgb.value = rgb(RGB);
+}
 
 
 n = "last";
