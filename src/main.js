@@ -198,7 +198,7 @@ black_layer.onmousedown = function(e){
 	return false;
 };
 
-black_layer.oncontextmenu = M[1].oncontextmenu = M[0].oncontextmenu = function(){
+black_layer.oncontextmenu = M[1].oncontextmenu = M[0].oncontextmenu = hue_selector.oncontextmenu = function(){
 	return false;
 };
 

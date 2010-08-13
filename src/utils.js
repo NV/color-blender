@@ -121,7 +121,7 @@ function hsb2hsl(h, s, b) {
 		b /= 100;
 	}
 
-	if (b === 0 || s === 0 && b === 1)
+	if (b == 0 || s == 0 && b == 1)
 		return {h:h, s:s, l:b};
 
 	var hsl = {h:h};
