@@ -57,7 +57,8 @@ function setHue(h) {
 	if (h > 1)
 		h /= 360;
 
-	H[n].setAttribute("transform", "translate(0,"+ ((1 - h % 1) * 255) + ")");
+	H[n].y = (1 - h % 1) * 255;
+	H[n].setAttribute("transform", "translate(0,"+ H[n].y + ")");
 
 	bg.setAttribute("fill", hsl(h, 1, .5));	
 }
@@ -150,7 +151,7 @@ function moveCircle(x, y) {
 
 var out = $("out");
 
-var pressed = 0;
+var pressed;
 var start_x, start_y;
 var xy;
 
@@ -169,8 +170,6 @@ function updateSB(x, y) {
 }
 
 function updateCirclePosition(e) {
-	if (!pressed) return;
-
 	var delta_x = e.pageX - start_x;
 	var delta_y = e.pageY - start_y;
 
@@ -202,27 +201,17 @@ black_layer.oncontextmenu = M[1].oncontextmenu = M[0].oncontextmenu = hue_select
 	return false;
 };
 
-document.onmousemove = function(e) {
-	if (pressed) {
-		updateCirclePosition(e);
-	}
-};
-
 document.onmouseup = function() {
-	pressed = 0;
+	pressed = h_pressed = 0;
 };
 
-var h_pressed;
-hue_selector.onmousedown = function(e){
-	h_pressed = true;
-	if (e.button)
-		n = 1;
-	else
-		n = 0;
+
+hue_selector.onclick = function(e){
 	updateHue(1 - (e.offsetY - 10) / 255);
 };
 
 function updateHue(h){
+	h = Math.max(Math.min(1, h), 0);
 	setHue(h);
 	HSBs[n].h = h;
 	var HSL = hsb2hsl(HSBs[n]);
@@ -245,6 +234,23 @@ function blend(){
 	B[0].hex.value = RGB.hex;
 }
 
+
+var h_pressed, h_y, h_start_y;
+H[0].onmousedown = H[1].onmousedown = function(e) {
+	n = e.target.id.split("_")[1];
+	h_y = H[n].y;
+	h_pressed = 1;
+	h_start_y = e.pageY;
+};
+
+document.onmousemove = function(e) {
+	if (pressed) {
+		updateCirclePosition(e);
+	} else if (h_pressed) {
+		var delta = e.pageY - h_start_y;
+		updateHue(1 - (h_y + delta) / 255)
+	}
+};
 
 n = 1;
 changeHSL(I[1].hsl);
