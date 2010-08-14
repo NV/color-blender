@@ -121,7 +121,7 @@ function hsb2hsl(h, s, b) {
 		b /= 100;
 	}
 
-	if (b == 0 || s == 0 && b == 1)
+	if (!b || !s && b == 1)
 		return {h:h, s:s, l:b};
 
 	var hsl = {h:h};
@@ -148,7 +148,7 @@ function hsl2hsb(h, s, l) {
 		l /= 100;
 	}
 	var hsb = {h: h};
-	if (l === 0 && s === 0) {
+	if (!l && !s) {
 		hsb.s = hsb.b = 0;
 	} else {
 		l *= 2;
