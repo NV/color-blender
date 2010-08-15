@@ -25,19 +25,18 @@ var H = [
 
 var B = [
 	{
-		hsl: $("b_hsl_0"),
-		hex: $("b_hex_0"),
-		rgb: $("b_rgb_0"),
-		sample: $("b_0")
+		hsl: $("hsl-0"),
+		hex: $("hex-0"),
+		rgb: $("rgb-0"),
+		sample: $("b-0")
 	}
-]
+];
 
 var HSBs = [{},{}];
 
 var inputs = $("inputs");
 var bg = $("bg");
 var black_layer = $("black_layer");
-
 var hue_selector = $("hue_selector");
 
 
@@ -45,12 +44,6 @@ var n = 0;
 inputs.addEventListener("focus", function(e){
 	n = e.target.id.split("_")[1] || n;
 }, !0);
-
-
-function updateColor(n, text) {
-	if (!text) return;
-	I[n].style.backgroundColor = text;
-}
 
 
 function setHue(h) {
@@ -63,73 +56,55 @@ function setHue(h) {
 	bg.setAttribute("fill", hsl(h, 1, .5));	
 }
 
-function changeHSL(element) {
+function updateColor(type, value) {
+	I[n].sample.style.backgroundColor = value;
 
-	var n = element.id.split("_")[1];
-	var text = element.value;
+	if (type == "hsl") {
 
-	if (!text) return;
-	I[n].sample.style.backgroundColor = text;
+		var triple = parseTriple(value);
+		var HSB = hsl2hsb(triple[0], triple[1], triple[2]);
+		setHue(HSB.h);
+		moveCircle(HSB.s*255, (1 - HSB.b)*255);
 
-	var triple = parseTriple(text);
-	var HSB = hsl2hsb(triple[0], triple[1], triple[2]);
-	setHue(HSB.h);
-	moveCircle(HSB.s*255, (1 - HSB.b)*255);
+		var RGB = hsl2rgb(triple[0], triple[1], triple[2]);
+		I[n].rgb.value = rgb(RGB);
+		I[n].hex.value = RGB.hex;
 
-	var RGB = hsl2rgb(triple[0], triple[1], triple[2]);
-	I[n].rgb.value = rgb(RGB);
-	I[n].hex.value = RGB.hex;
+	} else if (type == "rgb") {
 
-	HSBs[n] = HSB;
-	blend()
-}
+		triple = parseTriple(value);
+		HSB = rgb2hsb(triple[0], triple[1], triple[2]);
+		I[n].hex.value = rgb2hex.apply(null, triple);
+		setHue(HSB.h);
+		moveCircle(HSB.s*255, (1 - HSB.b)*255);
 
-function changeRGB(text) {
-	I[n].sample.style.backgroundColor = text;
-	var triple = parseTriple(text);
-	var HSB = rgb2hsb(triple[0], triple[1], triple[2]);
-	I[n].hex.value = rgb2hex.apply(null, triple);
-	setHue(HSB.h * 360);
-	moveCircle(HSB.s*255, (1 - HSB.b)*255);
+		var HSL = hsb2hsl(HSB.h, HSB.s, HSB.b);
+		I[n].hsl.value = hsl(HSL);
 
-	var HSL = hsb2hsl(HSB.h, HSB.s, HSB.b);
-	I[n].hsl.value = hsl(HSL);
+	} else if (type == "hex") {
+		triple = hex2rgb(value);
+		HSB = rgb2hsb(triple[0], triple[1], triple[2]);
+		I[n].rgb.value = rgb.apply(null, triple);
+		setHue(HSB.h);
+		moveCircle(HSB.s*255, (1 - HSB.b)*255);
 
-	HSBs[n] = HSB;
-	blend()
-}
-
-function changeRGBhex(text) {
-	I[n].sample.style.backgroundColor = text;
-	var triple = hex2rgb(text);
-	var HSB = rgb2hsb(triple[0], triple[1], triple[2]);
-	I[n].rgb.value = rgb.apply(null, triple);
-
-	setHue(HSB.h * 360);
-	moveCircle(HSB.s*255, (1 - HSB.b)*255);
-
-	var HSL = hsb2hsl(HSB.h, HSB.s, HSB.b);
-	I[n].hsl.value = hsl(HSL);
+		HSL = hsb2hsl(HSB.h, HSB.s, HSB.b);
+		I[n].hsl.value = hsl(HSL);
+	}
 
 	HSBs[n] = HSB;
-	blend()
+	blend();
 }
 
-
-
-I[0].hsl.onkeyup = I[1].hsl.onkeyup = function(e){
-	if (e.shiftKey && e.ctrlKey && e.metaKey) return;
-	changeHSL(e.target);
-};
-
-I[0].rgb.onkeyup = I[1].rgb.onkeyup= function(e){
-	if (e.shiftKey && e.ctrlKey && e.metaKey) return;
-	changeRGB(e.target.value);
-};
-
-I[0].hex.onkeyup = I[1].hex.onkeyup = function(e){
-	if (e.shiftKey && e.ctrlKey && e.metaKey) return;
-	changeRGBhex(e.target.value);
+inputs.onkeyup = function(e){
+	var element = e.target;
+	var value = element.value;
+	var id = element.id.split("_");
+	if (id[1] && element.prevValue != value) {
+		element.prevValue = value;
+		n = id[1];
+		updateColor(id[0], value);
+	}
 };
 
 
@@ -150,7 +125,6 @@ function moveCircle(x, y) {
 
 
 var out = $("out");
-
 var pressed;
 var start_x, start_y;
 var xy;
@@ -252,7 +226,7 @@ document.onmousemove = function(e) {
 	}
 };
 
-n = 1;
-changeHSL(I[1].hsl);
 n = 0;
-changeHSL(I[0].hsl);
+updateColor("hsl", I[0].hsl.value);
+n = 1;
+updateColor("hsl", I[1].hsl.value);
