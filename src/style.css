@@ -1,19 +1,36 @@
 body {
 	background: #CCC;
-	font: 85% Lucida Grande, sans-serif
+	text-align: center;
 }
-.color-sample {
+#inputs {
+	margin: 2em 0 1em;
+}
+p, b, input {
 	display: inline-block;
 	vertical-align: middle;
-	width: 40px;
-	height: 30px;
+	white-space: nowrap;
+	position: relative;
+	margin: 0;
 }
-p {
-	margin: 0
+b {
+	width: 70px;
+	height: 40px;
+}
+i {
+	position: absolute;
+	top: 50%;
+	left: 0;
+	right: 0;
+	height: 1px;
+	display: block;
 }
 input {
-	font-family: monospace;
-	width: 13em;
+	font: 14px monospace;
+	width: 164px;
+	margin-left: 1em;
+}
+.hex {
+	width: 4.5em;
 }
 rect, circle {
 	cursor: crosshair;

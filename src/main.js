@@ -33,6 +33,7 @@ var B = [
 ];
 
 var HSBs = [{},{}];
+var RGBs = [{},{}];
 
 var inputs = $("inputs");
 var bg = $("bg");
@@ -56,43 +57,48 @@ function setHue(h) {
 	bg.setAttribute("fill", hsl(h, 1, .5));	
 }
 
+function setColor(a, value) {
+	a.sample.style.background = a.sample.nextSibling.style.background = value;
+}
+
 function updateColor(type, value) {
-	I[n].sample.style.backgroundColor = value;
+	setColor(I[n], value);
 
 	if (type == "hsl") {
 
-		var triple = parseTriple(value);
-		var HSB = hsl2hsb(triple[0], triple[1], triple[2]);
+		var HSL = parseTriple(value);
+		var HSB = hsl2hsb(HSL);
 		setHue(HSB.h);
 		moveCircle(HSB.s*255, (1 - HSB.b)*255);
 
-		var RGB = hsl2rgb(triple[0], triple[1], triple[2]);
+		var RGB = hsl2rgb(HSL);
 		I[n].rgb.value = rgb(RGB);
 		I[n].hex.value = RGB.hex;
 
 	} else if (type == "rgb") {
 
-		triple = parseTriple(value);
-		HSB = rgb2hsb(triple[0], triple[1], triple[2]);
-		I[n].hex.value = rgb2hex.apply(null, triple);
+		RGB = parseTriple(value);
+		HSB = rgb2hsb(RGB);
+		I[n].hex.value = rgb2hex(RGB);
 		setHue(HSB.h);
 		moveCircle(HSB.s*255, (1 - HSB.b)*255);
 
-		var HSL = hsb2hsl(HSB.h, HSB.s, HSB.b);
+		HSL = hsb2hsl(HSB);
 		I[n].hsl.value = hsl(HSL);
 
 	} else if (type == "hex") {
-		triple = hex2rgb(value);
-		HSB = rgb2hsb(triple[0], triple[1], triple[2]);
-		I[n].rgb.value = rgb.apply(null, triple);
+		RGB = hex2rgb(value);
+		HSB = rgb2hsb(RGB);
+		I[n].rgb.value = rgb(RGB);
 		setHue(HSB.h);
 		moveCircle(HSB.s*255, (1 - HSB.b)*255);
 
-		HSL = hsb2hsl(HSB.h, HSB.s, HSB.b);
+		HSL = hsb2hsl(HSB);
 		I[n].hsl.value = hsl(HSL);
 	}
 
 	HSBs[n] = HSB;
+	RGBs[n] = RGB;
 	blend();
 }
 
@@ -117,6 +123,8 @@ function moveCircle(x, y) {
 	x = Math.max(0, x);
 	y = Math.min(y, black_layer.height.baseVal.value);
 	y = Math.max(0, y);
+	x = ~~(x + .5);
+	y = ~~(y + .5);
 	var m = M[n];
 	m.setAttribute(m.cx ? "cx" : "x", x);
 	m.setAttribute(m.cy ? "cy" : "y", y);
@@ -134,11 +142,13 @@ function updateSB(x, y) {
 	HSBs[n].s = x/255;
 	HSBs[n].b = 1 - y/255;
 	var HSL = hsb2hsl(HSBs[n]);
-	I[n].sample.style.backgroundColor = I[n].hsl.value = hsl(HSL);
+	I[n].hsl.value = hsl(HSL);
 
 	var RGB = hsl2rgb(HSL.h, HSL.s, HSL.l);
 	I[n].rgb.value = rgb(RGB);
 	I[n].hex.value = RGB.hex;
+	setColor(I[n], RGB.hex);
+	RGBs[n] = RGB;
 
 	blend()
 }
@@ -189,23 +199,29 @@ function updateHue(h){
 	setHue(h);
 	HSBs[n].h = h;
 	var HSL = hsb2hsl(HSBs[n]);
-	I[n].sample.style.background = I[n].hsl.value = hsl(HSL);
+	I[n].hsl.value = hsl(HSL);
 	var RGB = hsl2rgb(HSL);
+	setColor(I[n], RGB.hex)
 	I[n].rgb.value = rgb(RGB);
+	RGBs[n] = RGB;
 	blend()
 }
 
 function blend(){
 	var c = {
-		h: (HSBs[0].h + HSBs[1].h) / 2,
-		s: (HSBs[0].s + HSBs[1].s) / 2,
-		b: (HSBs[0].b + HSBs[1].b) / 2
+		r: (RGBs[0].r + RGBs[1].r) / 2,
+		g: (RGBs[0].g + RGBs[1].g) / 2,
+		b: (RGBs[0].b + RGBs[1].b) / 2
 	};
-	var HSL = hsb2hsl(c);
-	B[0].sample.style.background = B[0].hsl.value = hsl(HSL);
-	var RGB = hsl2rgb(HSL);
-	B[0].rgb.value = rgb(RGB);
-	B[0].hex.value = RGB.hex;
+
+	B[0].rgb.value = rgb(c);
+	c.hex = rgb2hex(c);
+	B[0].hex.value = c.hex;
+	setColor(B[0], c.hex);
+
+	var HSB = rgb2hsb(c);
+	B[0].hsl.value = hsl(hsb2hsl(HSB));
+
 }
 
 
@@ -226,7 +242,7 @@ document.onmousemove = function(e) {
 	}
 };
 
-n = 0;
-updateColor("hsl", I[0].hsl.value);
 n = 1;
 updateColor("hsl", I[1].hsl.value);
+n = 0;
+updateColor("hsl", I[0].hsl.value);

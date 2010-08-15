@@ -86,7 +86,7 @@ function hsl2rgb(h, s, l) {
 }
 
 function rgb2hex(r, g, b) {
-	if (typeof r == "object") {
+	if (r.r > -1) {
 		g = r.g;
 		b = r.b;
 		r = r.r;
@@ -101,11 +101,11 @@ function rgb2hex(r, g, b) {
 }
 
 function hex2rgb(hex) {
-	return [
-		parseInt(hex.slice(1,3), 16),
-		parseInt(hex.slice(3,5), 16),
-		parseInt(hex.slice(5,7), 16)
-	]
+	return {
+		r: parseInt(hex.slice(1,3), 16),
+		g: parseInt(hex.slice(3,5), 16),
+		b: parseInt(hex.slice(5,7), 16)
+	}
 }
 
 function hsb2hsl(h, s, b) {
@@ -142,6 +142,11 @@ function hsb2hsl(h, s, b) {
 }
 
 function hsl2hsb(h, s, l) {
+	if (h.h > -1) {
+		s = h.s;
+		l = h.l;
+		h = h.h;
+	}
 	if (h > 1 | s > 1 | l > 1) {
 		h /= 360;
 		s /= 100;
@@ -159,14 +164,19 @@ function hsl2hsb(h, s, l) {
 	return hsb
 }
 
-function rgb2hsb(red, green, blue) {
-	if (red > 1 || green > 1 || blue > 1) {
-		red /= 255;
-		green /= 255;
-		blue /= 255;
+function rgb2hsb(r, g, b) {
+	if (r.r > -1) {
+		g = r.g;
+		b = r.b;
+		r = r.r;
 	}
-	var max = Math.max(red, green, blue),
-		min = Math.min(red, green, blue),
+	if (r > 1 || g > 1 || b > 1) {
+		r /= 255;
+		g /= 255;
+		b /= 255;
+	}
+	var max = Math.max(r, g, b),
+		min = Math.min(r, g, b),
 		hue,
 		saturation,
 		brightness = max;
@@ -175,12 +185,12 @@ function rgb2hsb(red, green, blue) {
 	} else {
 		var delta = (max - min);
 		saturation = delta / max;
-		if (red == max) {
-			hue = (green - blue) / delta;
-		} else if (green == max) {
-			hue = 2 + ((blue - red) / delta);
+		if (r == max) {
+			hue = (g - b) / delta;
+		} else if (g == max) {
+			hue = 2 + ((b - r) / delta);
 		} else {
-			hue = 4 + ((red - green) / delta);
+			hue = 4 + ((r - g) / delta);
 		}
 		hue /= 6;
 		if (hue < 0)
@@ -207,12 +217,17 @@ if (!MouseEvent.prototype.offsetY) {
 	})
 }
 
-/**
- * @param {string} text such as "rgb(1,2,0)"
- * @return {Array} [1, 2, 0]
- */
 function parseTriple(text) {
-	return text.match(/\d+/g).map(function(d){
+	var a = text.match(/\d+/g).map(function(d){
 		return parseFloat(d)
 	});
+	return text[0] == "h" ? {
+		h: a[0],
+		s: a[1],
+		l: a[2]
+	} : {
+		r: a[0],
+		g: a[1],
+		b: a[2]
+	}
 }
