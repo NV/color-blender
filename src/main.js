@@ -38,7 +38,7 @@ var RGBs = [{},{}];
 var inputs = $("inputs");
 var bg = $("bg");
 var a = $("a");
-var hue_selector = $("hue_selector");
+var b = $("b");
 
 
 var n = 0;
@@ -168,10 +168,7 @@ function updateCirclePosition(e) {
 a.onmousedown = function(e){
 	pressed = true;
 	
-	if (e.button)
-		n = 1;
-	else
-		n = 0;
+	n = (e.button || e.ctrlKey) ? 1 : 0;
 
 	xy = [e.offsetX - 10, e.offsetY - 10];
 
@@ -180,11 +177,9 @@ a.onmousedown = function(e){
 	xy = moveCircle(xy);
 	start_x = e.pageX;
 	start_y = e.pageY;
-
-	return false;
 };
 
-a.oncontextmenu = M[1].oncontextmenu = M[0].oncontextmenu = hue_selector.oncontextmenu = function(){
+a.oncontextmenu = b.oncontextmenu = function(){
 	return false;
 };
 
@@ -193,7 +188,8 @@ document.onmouseup = function() {
 };
 
 
-hue_selector.onclick = function(e){
+b.onmousedown = function(e){
+	n = (e.button || e.ctrlKey) ? 1 : 0;
 	updateHue(1 - (e.offsetY - 10) / 255);
 };
 
@@ -204,7 +200,7 @@ function updateHue(h){
 	var HSL = hsb2hsl(HSBs[n]);
 	I[n].hsl.value = hsl(HSL);
 	var RGB = hsl2rgb(HSL);
-	setColor(I[n], RGB.hex)
+	setColor(I[n], RGB.hex);
 	I[n].rgb.value = rgb(RGB);
 	RGBs[n] = RGB;
 	blend()
