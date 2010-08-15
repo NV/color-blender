@@ -32,6 +32,6 @@ input {
 .hex {
 	width: 4.5em;
 }
-rect, circle {
+#a, #m_0, #m_1, #hue_selector {
 	cursor: crosshair;
 }

@@ -37,7 +37,7 @@ var RGBs = [{},{}];
 
 var inputs = $("inputs");
 var bg = $("bg");
-var black_layer = $("black_layer");
+var a = $("a");
 var hue_selector = $("hue_selector");
 
 
@@ -51,14 +51,17 @@ function setHue(h) {
 	if (h > 1)
 		h /= 360;
 
-	H[n].y = (1 - h % 1) * 255;
+	H[n].y = (1 - h) * 255;
 	H[n].setAttribute("transform", "translate(0,"+ H[n].y + ")");
 
 	bg.setAttribute("fill", hsl(h, 1, .5));	
 }
 
-function setColor(a, value) {
+function setColor(a, value, dontUpdateMarker) {
 	a.sample.style.background = a.sample.nextSibling.style.background = value;
+	if (!dontUpdateMarker) {
+		M[n].setAttribute("fill", value);
+	}
 }
 
 function updateColor(type, value) {
@@ -119,9 +122,9 @@ function moveCircle(x, y) {
 		y = x[1];
 		x = x[0];
 	}
-	x = Math.min(x, black_layer.width.baseVal.value);
+	x = Math.min(x, a.width.baseVal.value);
 	x = Math.max(0, x);
-	y = Math.min(y, black_layer.height.baseVal.value);
+	y = Math.min(y, a.height.baseVal.value);
 	y = Math.max(0, y);
 	x = ~~(x + .5);
 	y = ~~(y + .5);
@@ -162,7 +165,7 @@ function updateCirclePosition(e) {
 	updateSB(_xy[0], _xy[1]);
 }
 
-black_layer.onmousedown = function(e){
+a.onmousedown = function(e){
 	pressed = true;
 	
 	if (e.button)
@@ -181,7 +184,7 @@ black_layer.onmousedown = function(e){
 	return false;
 };
 
-black_layer.oncontextmenu = M[1].oncontextmenu = M[0].oncontextmenu = hue_selector.oncontextmenu = function(){
+a.oncontextmenu = M[1].oncontextmenu = M[0].oncontextmenu = hue_selector.oncontextmenu = function(){
 	return false;
 };
 
@@ -217,7 +220,7 @@ function blend(){
 	B[0].rgb.value = rgb(c);
 	c.hex = rgb2hex(c);
 	B[0].hex.value = c.hex;
-	setColor(B[0], c.hex);
+	setColor(B[0], c.hex, 1);
 
 	var HSB = rgb2hsb(c);
 	B[0].hsl.value = hsl(hsb2hsl(HSB));
