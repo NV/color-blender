@@ -177,6 +177,7 @@ a.onmousedown = function(e){
 	xy = moveCircle(xy);
 	start_x = e.pageX;
 	start_y = e.pageY;
+	return !1;
 };
 
 a.oncontextmenu = b.oncontextmenu = function(){
@@ -230,6 +231,7 @@ H[0].onmousedown = H[1].onmousedown = function(e) {
 	h_y = H[n].y;
 	h_pressed = 1;
 	h_start_y = e.pageY;
+	return !1;
 };
 
 document.onmousemove = function(e) {
