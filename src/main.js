@@ -227,7 +227,7 @@ function blend(){
 
 var h_pressed, h_y, h_start_y;
 H[0].onmousedown = H[1].onmousedown = function(e) {
-	n = e.target.id.split("_")[1];
+	n = e.target.parentNode.id.split("_")[1];
 	h_y = H[n].y;
 	h_pressed = 1;
 	h_start_y = e.pageY;
