@@ -55,7 +55,7 @@ function sH(h) {
 	H[n].y = (1 - h) * 255;
 	H[n].setAttribute("transform", "translate(0,"+ H[n].y + ")");
 
-	bg.setAttribute("fill", hsl(h, 1, .5));	
+	bg.setAttribute("fill", rgb(hsl2rgb(h, 1, .5)));	
 }
 
 function sC(a, value, dontUpdateMarker) {
@@ -64,8 +64,6 @@ function sC(a, value, dontUpdateMarker) {
 }
 
 function uC(type, value) {
-	sC(I[n], value);
-
 	if (type == "hsl") {
 
 		var HSL = p3(value);
@@ -99,6 +97,7 @@ function uC(type, value) {
 		I[n].hsl.value = hsl(HSL);
 	}
 
+	sC(I[n], rgb(RGB));
 	Hs[n] = HSB;
 	Rs[n] = RGB;
 	blend();
@@ -223,6 +222,6 @@ d.onmousemove = function(e) {
 };
 
 n = 1;
-uC("hsl", I[1].hsl.value);
+uC("rgb", I[1].rgb.value);
 n = 0;
-uC("hsl", I[0].hsl.value);
+uC("rgb", I[0].rgb.value);
