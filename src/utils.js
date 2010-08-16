@@ -1,3 +1,6 @@
+var d = document,
+rg = /^(?=[\da-f]$)/;
+
 function hsl(h, s, l) {
 	if (h.h > -1) {
 		s = h.s;
@@ -31,7 +34,7 @@ function rgb(r, g, b) {
 }
 
 
-var rg = /^(?=[\da-f]$)/;
+
 
 /**
  * @see http://github.com/DmitryBaranovskiy/raphael/blob/master/raphael.js
@@ -178,8 +181,7 @@ function rgb2hsb(r, g, b) {
 	var max = Math.max(r, g, b),
 		min = Math.min(r, g, b),
 		hue,
-		saturation,
-		brightness = max;
+		saturation;
 	if (min == max) {
 		return {h: 0, s: 0, b: max};
 	} else {
@@ -198,26 +200,28 @@ function rgb2hsb(r, g, b) {
 		else if (hue > 1)
 			hue--;
 	}
-	return {h: hue, s: saturation, b: brightness};
+	return {h: hue, s: saturation, b: max};
 }
 
 
 function $(id) {
-	return document.getElementById(id)
+	return d.getElementById(id)
 }
 
-if (!MouseEvent.prototype.offsetX) {
-	MouseEvent.prototype.__defineGetter__("offsetX", function(){
-		return this.clientX - this.target.getBoundingClientRect().left + 10;
-	})
-}
-if (!MouseEvent.prototype.offsetY) {
-	MouseEvent.prototype.__defineGetter__("offsetY", function(){
-		return this.clientY - this.target.getBoundingClientRect().top + 10;
-	})
-}
+try{
+	if (!MouseEvent.prototype.offsetX) {
+		MouseEvent.prototype.__defineGetter__("offsetX", function(){
+			return this.clientX - this.target.getBoundingClientRect().left + 10;
+		})
+	}
+	if (!MouseEvent.prototype.offsetY) {
+		MouseEvent.prototype.__defineGetter__("offsetY", function(){
+			return this.clientY - this.target.getBoundingClientRect().top + 10;
+		})
+	}
+} catch (e){}
 
-function parseTriple(text) {
+function p3(text) {
 	var a = text.match(/\d+/g).map(function(d){
 		return parseFloat(d)
 	});

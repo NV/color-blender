@@ -1,8 +1,13 @@
-body {
-	background: #CCC;
+html {
 	text-align: center;
 }
-#inputs {
+body {
+	background: #CCC;
+	display: inline-block;
+	text-align: left;
+	margin: 0 auto;
+}
+#ip {
 	margin: 2em 0 1em;
 }
 p, b, input {
@@ -29,9 +34,12 @@ input {
 	width: 164px;
 	margin-left: 1em;
 }
-.hex {
+i + input {
 	width: 4.5em;
 }
-#a, #m_0, #m_1, #hue_selector {
+svg {
+	margin-left: -10px;
+}
+#a, #m_0, #m_1, #b {
 	cursor: crosshair;
 }

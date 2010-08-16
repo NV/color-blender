@@ -6,22 +6,22 @@
 </head>
 <body>
 
-<div id="inputs">
+<div id="ip">
 	<p>
-		<b id="sample_0"/><i/>
-		<input id="hex_0" class="hex"/>
+		<b id="s_0"/><i/>
+		<input id="hex_0"/>
 		<input id="rgb_0"/>
 		<input id="hsl_0" value="hsl(40, 35%, 46%)"/>
 	</p><br/>
 	<p>
 		<b id="b-0"/><i/>
-		<input id="hex-0" class="hex" readonly=""/>
+		<input id="hex-0" readonly=""/>
 		<input id="rgb-0" readonly=""/>
 		<input id="hsl-0" readonly=""/>
 	</p><br/>
 	<p>
-		<b id="sample_1"/><i/>
-		<input id="hex_1" class="hex"/>
+		<b id="s_1"/><i/>
+		<input id="hex_1"/>
 		<input id="rgb_1"/>
 		<input id="hsl_1" value="hsl(0, 90%, 10%)"/>
 	</p>
@@ -29,15 +29,15 @@
 
 <svg id="paper" xmlns="http://www.w3.org/2000/svg" version="1.1" width="355" height="275">
 	<defs>
-		<linearGradient id="white">
+		<linearGradient id="w">
 			<stop offset="0%" stop-color="white"/>
 			<stop offset="100%" stop-color="white" stop-opacity="0"/>
 		</linearGradient>
-		<linearGradient id="black" x1="0" y1="1" x2="0" y2="0">
+		<linearGradient id="z" x1="0" y1="1" x2="0" y2="0">
 			<stop offset="0%" stop-color="black"/>
 			<stop offset="100%" stop-color="black" stop-opacity="0"/>
 		</linearGradient>
-		<linearGradient id="hue" x1="0" y1="1" x2="0" y2="0">
+		<linearGradient id="g" x1="0" y1="1" x2="0" y2="0">
 			<stop offset="0%" stop-color="#ff0000"/>
 			<stop offset="17%" stop-color="#ffff00"/>
 			<stop offset="34%" stop-color="#00ff00"/>
@@ -49,19 +49,19 @@
 	</defs>
 	<g transform="translate(10, 10)">
 		<rect width="255" height="255" fill="hsl(1, 100%, 50%)" id="bg"/>
-		<rect fill="url(#white)" width="255" height="255"/>
-		<rect id="black_layer" fill="url(#black)" width="255" height="255"/>
-		<rect id="m_1" transform="translate(-4.5, -4.5)" x="255" y="0" width="10" height="10" fill="none" stroke="#FFF" stroke-width="1"/>
+		<rect fill="url(#w)" width="255" height="255"/>
+		<rect id="black_layer" fill="url(#z)" width="255" height="255"/>
+		<rect id="m_1" transform="translate(-5.5, -5.5)" x="255" y="0" width="12" height="12" fill="none" stroke="#FFF" stroke-width="1"/>
 		<circle id="m_0" transform="translate(0.5, 0.5)" r="7" fill="none" stroke="#FFF" stroke-width="1"/>
 		<rect id="a" width="255" height="255" fill="rgba(0,0,0,0)"/>
 	</g>
 	<g transform="translate(275, 10)">
-		<rect id="hue_selector" fill="url(#hue)" width="20" height="255"/>
-		<g id="hue_0" stroke="#666">
+		<rect fill="url(#g)" width="20" height="255"/>
+		<g id="h_0" stroke="#666">
 			<line x1="10" x2="20"/>
 			<circle r="5" cx="25" fill="rgba(0,0,0,.1)"/>
 		</g>
-		<g id="hue_1" stroke="#666">
+		<g id="h_1" stroke="#666">
 			<line x1="10" x2="20"/>
 			<rect x="20.5" y="-5.5" width="9" height="10" fill="rgba(0,0,0,.1)"/>
 		</g>
@@ -69,6 +69,6 @@
 	</g>
 </svg>
 
-<script src="src/utils.js"></script>
-<script src="src/main.js"></script>
+<script src="src/utils.js"/>
+<script src="src/main.js"/>
 </body></html>
