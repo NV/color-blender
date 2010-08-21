@@ -1,0 +1,51 @@
+html {
+	text-align: center;
+}
+body {
+	background: #CCC;
+	display: inline-block;
+	text-align: left;
+	margin: 0 auto;
+}
+#ip {
+	margin: 2em 0 1em;
+}
+p, b, input {
+	display: inline-block;
+	vertical-align: middle;
+	white-space: nowrap;
+	position: relative;
+	margin: 0;
+}
+b {
+	width: 70px;
+	height: 40px;
+}
+i {
+	position: absolute;
+	top: 50%;
+	left: 0;
+	right: 0;
+	height: 1px;
+	display: block;
+}
+input {
+	font: 14px monospace;
+	width: 164px;
+	margin-left: 1em;
+}
+i + input {
+	width: 4.5em;
+}
+svg {
+	margin-left: -10px;
+}
+#a, #m_0, #m_1, #b {
+	cursor: crosshair;
+}
+#h_0, #h_1 {
+	opacity: .5 !important;
+}
+#h_0:hover, #h_1:hover {
+	opacity: 1 !important;
+}
