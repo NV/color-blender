@@ -1,4 +1,5 @@
 var d = document,
+webkit = "WebkitTransition" in d.body.style,
 rg = /^(?=[\da-f]$)/;
 
 function hsl(h, s, l) {
@@ -205,11 +206,11 @@ function rgb2hsb(r, g, b) {
 
 
 function offsetX(event){
-	return "offsetX" in event ? event.offsetX
+	return "offsetX" in event ? event.offsetX + (webkit ? 0 : 10)
          : event.clientX - event.target.getBoundingClientRect().left + 10;
 }
 function offsetY(event){
-	return "offsetY" in event ? event.offsetY
+	return "offsetY" in event ? event.offsetY + (webkit ? 0 : 10)
          : event.clientY - event.target.getBoundingClientRect().top + 10;
 }
 
