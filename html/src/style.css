@@ -44,7 +44,7 @@ svg {
 	cursor: crosshair;
 }
 #h_0, #h_1 {
-	opacity: .5;
+	opacity: .7;
 }
 #h_0:hover, #h_1:hover {
 	opacity: 1;

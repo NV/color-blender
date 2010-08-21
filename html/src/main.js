@@ -59,11 +59,11 @@ var B = [
 ];
 
 var H = [
-	$s("g", {id:"h_0", stroke:"#666"}, [
+	$s("g", {id:"h_0", stroke:"#333"}, [
 		$s("line", {x1:10, x2:20}),
 		$s("circle", {r:5, cx:25, "fill-opacity": .2})
 	]),
-	$s("g", {id:"h_1", stroke:"#666"}, [
+	$s("g", {id:"h_1", stroke:"#333"}, [
 		$s("line", {x1:10, x2:20}),
 		$s("rect", {x:20.5, y:-5.5, width:9, height:10, "fill-opacity": .2})
 	])
