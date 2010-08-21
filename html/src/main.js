@@ -257,7 +257,7 @@ d.onmouseup = function() {
 
 b.onmousedown = function(e){
 	n = (e.button || e.ctrlKey) ? 1 : 0;
-	updateHue(1 - (e.offsetY - 10) / 255);
+	updateHue(1 - (offsetY(e) - 10) / 255);
 };
 
 function updateHue(h){
