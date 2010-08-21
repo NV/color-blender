@@ -43,3 +43,9 @@ svg {
 #a, #m_0, #m_1, #b {
 	cursor: crosshair;
 }
+#h_0, #h_1 {
+	opacity: .5;
+}
+#h_0:hover, #h_1:hover {
+	opacity: 1;
+}
