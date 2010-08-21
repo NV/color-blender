@@ -1,5 +1,5 @@
 var d = document,
-webkit = "WebkitTransition" in d.body.style,
+webkit = "onwebkitanimationend" in window,
 rg = /^(?=[\da-f]$)/;
 
 function hsl(h, s, l) {
