@@ -4,10 +4,11 @@
  */
 Element.prototype.attr = function(key, value) {
 	if (typeof key == "object")
-		for (var k in key)
-			if (key.hasOwnProperty(k))
-				this.setAttribute(k, String(key[k]));
-
+		for (var k in key) {
+			if (key.hasOwnProperty(k)) {
+				this.attr(k, String(key[k]));
+			}
+		}
 	else if (typeof value == "undefined")
 		return this.getAttribute(key);
 	else
@@ -134,14 +135,14 @@ function sH(h) {
 		h /= 360;
 
 	H[n].y = (1 - h) * 255;
-	H[n].setAttribute("transform", "translate(0,"+ H[n].y + ")");
+	H[n].attr("transform", "translate(0,"+ H[n].y + ")");
 
-	bg.setAttribute("fill", rgb(hsl2rgb(h, 1, .5)));	
+	bg.attr("fill", rgb(hsl2rgb(h, 1, .5)));
 }
 
 function sC(a, value, dontUpdateMarker) {
 	a.s.style.background = a.s.nextSibling.style.background = value;
-	!dontUpdateMarker && M[n].setAttribute("fill", value);
+	!dontUpdateMarker && M[n].attr("fill", value);
 }
 
 function uC(type, value) {
@@ -202,8 +203,8 @@ function mM(x, y) {
 	x = ~~(x + .5);
 	y = ~~(y + .5);
 	var m = M[n];
-	m.setAttribute(m.cx ? "cx" : "x", x);
-	m.setAttribute(m.cy ? "cy" : "y", y);
+	m.attr(m.cx ? "cx" : "x", x);
+	m.attr(m.cy ? "cy" : "y", y);
 	return [x, y];
 }
 
