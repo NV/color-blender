@@ -1,6 +1,5 @@
 var d = document,
-webkit = "onwebkitanimationend" in window,
-rg = /^(?=[\da-f]$)/;
+webkit = "onwebkitanimationend" in window;
 
 function hsl(h, s, l) {
 	if (h.h > -1) {
@@ -236,7 +235,7 @@ function $(id) {
 	return d.getElementById(id)
 }
 
-function p3(text) {
+function parseTriple(text) {
 	var a = text.match(/\d+/g).map(function(d){
 		return parseFloat(d)
 	});
