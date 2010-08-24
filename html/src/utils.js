@@ -89,28 +89,46 @@ function hsl2rgb(h, s, l) {
 	return rgb;
 }
 
-function rgb2hex(r, g, b) {
-	if (r.r > -1) {
-		g = r.g;
-		b = r.b;
-		r = r.r;
+
+/**
+ * >>> rgb2hex(255, 0, 153)
+ * "#ff0099"
+ * >>> rgb2hex({r: 5.123, g: 1.987, b: 3.871})
+ * "#050103"
+ * 
+ * @param {Object|string} red
+ * @param {string} green
+ * @param {string} blue
+ * @return {string}
+ * @see http://jsperf.com/rgb-decimal-to-hex/5
+ */
+function rgb2hex(red, green, blue) {
+	if (red.r > -1) {
+		green = red.g;
+		blue = red.b;
+		red = red.r;
 	}
-	r = (~~r).toString(16);
-	g = (~~g).toString(16);
-	b = (~~b).toString(16);
-	r = r.replace(rg, "0");
-	g = g.replace(rg, "0");
-	b = b.replace(rg, "0");
-	return "#" + r + g + b;
+	return "#" + (0x1000000 | blue | (green << 8) | (red << 16)).toString(16).slice(1);
 }
 
+
+/**
+ * >>> hex2rgb("#ff0099")
+ * {r:255, g:0, b:153}
+ * 
+ * @param {string} hex
+ * @return {Object}
+ * @see http://gist.github.com/547670
+ */
 function hex2rgb(hex) {
+	var h = parseInt(hex.slice(1), 16);
 	return {
-		r: parseInt(hex.slice(1,3), 16),
-		g: parseInt(hex.slice(3,5), 16),
-		b: parseInt(hex.slice(5,7), 16)
+		r: h >>> 16,
+		g: (h >>> 8) & 0xff,
+		b: h & 0xff
 	}
 }
+
 
 function hsb2hsl(h, s, b) {
 	if (h.h > -1) {
