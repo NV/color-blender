@@ -1,4 +1,4 @@
-# [Color Blender](http://nv.github.com/color-blender/)
+# [Color Blender](http://nv.github.com/color-blender/html/)
 
 [![Color Blender screenshot](http://nv.github.com/color-blender/screenshot.png)](http://nv.github.com/color-blender/)
 
